@@ -1,0 +1,49 @@
+
+div
+
+  input#postId(type="hidden", value="#{post.getId()}")
+  input(type="hidden", name="_csrf" value="#{_csrf.token}")
+
+  span.sympathy-block
+    span.sympathy #{viewHelper.formatNumberByThousands(post.getVisitsCount())}
+    img.borderless(src="/images/open-eye-with-blank-pupil.png")
+
+  span.sympathy-block
+    img#like.borderless.sympathy-button(src="/images/like.png")
+    span#sympathy.sympathy #{viewHelper.formatNumberByThousands(post.getSympathyCount())}
+    img#dislike.borderless.sympathy-button(src="/images/dislike.png")
+
+
+script
+  :javascript
+    var token = $("input[name='_csrf']").val();
+    var header = "X-CSRF-TOKEN";
+    $(document).ajaxSend(function (e, xhr, options) {
+      xhr.setRequestHeader(header, token);
+    });
+    $("#like").click(function() {
+        var postId = $("#postId").val();
+        $.ajax({
+            url : "/sympathy/like",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+                postId: postId
+            })
+        }).done(function(data) {
+            $("#sympathy").text(data.sympathy);
+        });
+    });
+    $("#dislike").click(function () {
+        var postId = $("#postId").val();
+        $.ajax({
+            url: "/sympathy/dislike",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+                postId: postId
+            })
+        }).done(function (data) {
+            $("#sympathy").text(data.sympathy);
+        });
+    });

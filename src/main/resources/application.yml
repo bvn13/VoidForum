@@ -1,0 +1,46 @@
+server:
+    port: 9000
+    contextPath:
+
+spring:
+    profiles:
+      active: dev
+
+    thymeleaf:
+      #mode: html5
+      #suffix: .html
+      cache: false
+
+    jade4j:
+      caching: false
+
+    dataSource:
+      driverClassName: org.postgresql.Driver
+      url: jdbc:postgresql://localhost:5432/voidforum
+      username: voidforum
+      password: vfpass
+
+    hibernate:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+      hbm2ddl.auto: update
+      show_sql: false
+
+    redis:
+      embedded : false
+      host: localhost
+      port: 6379
+      default_expire_time: 86400
+
+    session:
+      store-type: redis
+
+
+    jpa:
+      properties:
+        hibernate:
+          current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+
+    http:
+      multipart:
+        max-file-size: 100Mb
+        max-request-size: 100Mb

@@ -1,0 +1,19 @@
+doctype html
+html(lang="en")
+  head
+    include head 
+    block head 
+    
+  body.typo
+    include navbar 
+    
+    include top
+                
+    .container.main-container
+      block content
+
+    include footer
+    
+    if viewHelper.isProductionMode()
+      include ../fragments/ga
+      include ../fragments/ya-metrics

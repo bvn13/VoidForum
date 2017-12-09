@@ -1,0 +1,68 @@
+extends ../layout/app 
+
+block title 
+  = viewHelper.metaTitle(post.getTitle())
+  
+block page_title
+  h1 #{post.getTitle()}
+  include ../posts/fragments/social
+  p #{viewHelper.getFormattedDate(post.getCreatedAt())}
+
+  hr
+
+block content
+  .post
+    .content.markdown-body.my-font
+      !{post.getRenderedContent()}
+
+    .info 
+      if !tags.isEmpty()
+        ul.tags
+          li Tags:
+          for tag in tags
+            li: a.btn.btn-xs.btn-default(href="/tags/#{tag.getName()}") #{tag.getName()}
+        
+      .author 
+        #{post.getCreatedAt() == post.getUpdatedAt() ? "Created" : "Updated"} 
+        | on #{viewHelper.getFormattedDate(post.getCreatedAt())}
+
+    .comments 
+      include ../comments/list
+
+
+  // The Modal
+  div#myModal.modal
+    span.close &times;
+    img#img01.modal-content
+    div#caption
+
+
+  script
+    :javascript
+      $(document).ready(function() {
+        $(".markdown-body .markdown-post img, .markdown-body .html-post img.clickable").each(function(i, img){
+
+          // Get the modal
+          var modal = document.getElementById('myModal');
+
+          // Get the image and insert it inside the modal - use its "alt" text as a caption
+          //var img = document.getElementById('myImg');
+          var modalImg = document.getElementById("img01");
+          var captionText = document.getElementById("caption");
+          img.onclick = function () {
+              modal.style.display = "block";
+              modalImg.src = this.src;
+              captionText.innerHTML = this.alt;
+          }
+
+          // Get the <span> element that closes the modal
+          var span = document.getElementsByClassName("close")[0];
+
+          // When the user clicks on <span> (x), close the modal
+          span.onclick = function () {
+              modal.style.display = "none";
+          }
+
+        });
+      });
+

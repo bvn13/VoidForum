@@ -1,0 +1,33 @@
+
+
+form.post-form(method='POST', action='/admin/robotsAgents/#{form.getId()}/edit')
+  input(type="hidden", name='_csrf', value='#{_csrf.token}')
+  input(type="hidden", name="id", value="#{form.getId()}")
+  .item-row
+    | User-Agent:
+    input.form-control(name="userAgent", value="#{form.getUserAgent()}")
+  .item-row
+    label
+      | Is RegExp:
+      input(name="isRegexp", type="hidden", value="#{form.getIsRegexp() == true ? 'true' : 'false'}")
+      input(id="isRegexp", type="checkbox")
+  .item-row
+    input.btn.btn-primary(type='submit', value='Save')
+
+
+  script
+    :javascript
+      $(document).ready(function() {
+
+        var isChecked = $("input[name=isRegexp]").val();
+        if (isChecked === 'true') {
+            $("input#isRegexp").attr('checked', 'checked');
+        } else {
+            $("input#isRegexp").removeAttr('checked');
+        }
+
+        $("input#isRegexp").click(function(){
+            $("input[name=isRegexp]").val(""+$(this).is(':checked'));
+        });
+
+      });

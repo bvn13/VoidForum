@@ -1,0 +1,66 @@
+meta(charset="utf-8")
+meta(http-equiv="X-UA-Compatible", content="IE=edge")
+meta(name="viewport", content="width=device-width, initial-scale=1")
+
+if seoDescription != null && !seoDescription.isEmpty()
+  meta(name="description", content="#{seoDescription}")
+else
+  meta(name="description", content="#{App.getSiteSlogan()}")
+  
+if seoKeywords != null && !seoKeywords.isEmpty()
+  meta(name='keywords', content="#{seoKeywords}")
+
+meta(name="author", content="bvn13")
+
+link(rel="shortcut icon", href="/favicon.ico", type="image/png")
+link(rel="icon", href="/favicon.ico", type="image/png")
+link(rel="icon", type="image/png", sizes="32x32", href="/favicon-32x32.png")
+link(rel="icon", type="image/png", sizes="16x16", href="/favicon-16x16.png")
+
+// search engines verification
+meta(name="yandex-verification", content="10d4510d1e88a1ed")
+meta(name='wmail-verification', content='4dcdcf694a46ce7015fdfb69eb87b87c')
+meta(name="google-site-verification", content="OmD_S_p2BcdcKepDETH25TRCckl6yVXdkhP6QSfv0RU")
+meta(name="msvalidate.01", content="7FF4CBEF427D306264AD6A092622B438")
+
+//open graph
+meta( property="og:site_name", content="#{App.getSiteName()}" )
+
+if seoData != null
+  //sended only from post
+  meta( property="og:title", content="#{post.getTitle()} - #{App.getSiteName()}" )
+  meta( property="og:url", content="#{viewHelper.getPostUrl(post)}" )
+
+  meta( property="og:type", content="#{seoData.getOgType().getName()}" )
+  meta( property="og:locale", content="#{seoData.getOgLocale().getName()}" )
+  meta( property="og:image", content="#{viewHelper.getAbsoluteUrl(seoData.getOgImage())}" )
+  meta( property="og:video", content="#{viewHelper.getAbsoluteUrl(seoData.getOgVideo())}" )
+
+else
+  meta( property="og:title", content="#{App.getSiteName()}" )
+  meta( property="og:type", content="website" )
+  meta( property="og:url", content="#{App.getMainUri()}" )
+
+
+title
+  block title
+    if post != null
+      = post.getTitle() - App.getSiteName()
+    else
+      = App.getSiteName()
+
+link(rel='stylesheet', type='text/css', href='/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css')
+link(rel='stylesheet', type='text/css', href='/webjars/font-awesome/4.7.0/css/font-awesome.min.css')
+// link(rel="stylesheet", type='text/css', href="/vendors/typo.css-2.1.2/typo.min.css")
+link(rel="stylesheet", type='text/css', href="/css/theme-light.css")
+link(rel="stylesheet", type='text/css', href="/css/mystyle.css")
+link(rel="stylesheet", type='text/css', href="/css/modal.css")
+link(rel="stylesheet", type='text/css', href='/vendors/prism/prism.css')
+
+
+script(src="/webjars/jquery/3.2.1/jquery.min.js")
+script(src="/vendors/prism/prism.js")
+
+// share buttons verification
+script(type='text/javascript', src='//platform-api.sharethis.com/js/sharethis.js#property=5a021db9fb1be70012766de3&product=custom-share-buttons', async='async')
+

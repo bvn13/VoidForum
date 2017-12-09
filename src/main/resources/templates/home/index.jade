@@ -1,0 +1,14 @@
+extends ../layout/app
+
+block page_title
+  // .avatar
+  //  img(src="/images/user.jpg")
+  h1 #{App.getSiteName()}
+  p.meta #{App.getSiteSlogan()}
+
+block title
+  = App.getSiteName()
+
+block content
+  include ../posts/list
+

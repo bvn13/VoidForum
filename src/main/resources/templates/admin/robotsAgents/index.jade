@@ -1,0 +1,45 @@
+extends ../layout/admin
+
+block content
+  h1 Robots' User-Agent list
+  hr
+
+  include fragments/seoRobotAgentForm
+
+  hr
+
+  .row(style="margin-top: 10px;")
+    .col-sm-12
+      table.table.table-bordered.table-hover.table-stripped
+        thead
+          tr
+            th ID
+            th User-Agent
+            th Is Regexp
+            th Operations
+
+        tbody
+          for record in records
+            tr
+              td #{record.getId()}
+              td #{record.getUserAgent()}
+              td #{record.getIsRegexp().toString()}
+              td.operations
+                a.btn.btn-xs.btn-primary(href="/admin/robotsAgents/#{record.getId()}/edit")
+                  i.fa.fa-edit
+                a.btn.btn-xs.btn-danger.btn-delete(href="javascript:deleteRobotAgent(#{record.getId()})", fileId="#{record.getId()}")
+                  i.fa.fa-trash-o
+
+                form(id="form-robotAgent-#{record.getId()}",style="visibility: hidden", method="post", action="/admin/robotsAgents/#{record.getId()}/delete")
+                    input(type="hidden", name='_csrf', value='#{_csrf.token}')
+
+
+
+
+    script
+        :javascript
+            function deleteRobotAgent(recordId) {
+                if (confirm("Are you sure to delete RobotAgent @" + recordId)) {
+                    $('#form-robotAgent-' + recordId).submit();
+                }
+            }

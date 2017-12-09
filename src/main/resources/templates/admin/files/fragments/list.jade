@@ -1,0 +1,45 @@
+
+
+.row(style="margin-top: 10px;")
+  .col-sm-12
+    table.table.table-bordered.table-hover.table-stripped
+      thead
+        tr
+          th ID
+          th Title
+          th Name
+          th Size
+          th Owner
+          th Created at
+          th Updated at
+          th Operations
+
+      tbody
+        for file in files
+          tr
+            td #{file.getId()}
+            td #{file.getTitle()}
+            td #{file.getName()}
+            td #{file.getSizeFormatted()}
+            td #{file.getUser().getNickname()}
+            td #{file.getCreatedAt()}
+            td #{file.getUpdatedAt()}
+            td.operations
+              a.btn.btn-xs.btn-primary(href="/admin/files/#{file.getId()}/edit")
+                i.fa.fa-edit
+              a.btn.btn-xs.btn-danger.btn-delete(href="javascript:deleteFile(#{file.getId()})", fileId="#{file.getId()}")
+                i.fa.fa-trash-o
+
+              form(id="form-file-#{file.getId()}",style="visibility: hidden", method="post", action="/admin/files/#{file.getId()}/delete")
+                input(type="hidden", name='_csrf', value='#{_csrf.token}')
+
+
+
+
+script
+  :javascript
+      function deleteFile(fileId){
+          if (confirm("Are you sure to delete file @"+fileId)) {
+              $('#form-file-'+fileId).submit();
+          }
+      }

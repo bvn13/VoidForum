@@ -1,0 +1,21 @@
+// Created by bvn13 on 09.12.2017.
+
+div
+  .table
+    .tr.comment
+      .td
+        = comment.getUser().getNickname()
+        = viewHelper.getFormattedDate(comment.getCreatedAt())
+      .td
+        !{comment.getRenderedContext()}
+      if userService.isCurrentUserAdmin()
+        .td
+          admin
+
+
+  include fragments/commentCreationForm
+
+  //if commentService.childrenCount(comments, comment) > 0
+  //  .comment-children(style="padding-left: #{5 * commentService.childrenCount(comments, comment)}px")
+  //    include list
+

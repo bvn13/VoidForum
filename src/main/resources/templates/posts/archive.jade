@@ -1,0 +1,24 @@
+extends ../layout/app 
+
+block page_title
+  h1 Posts Archive
+  p Look back and find something interesting.
+  
+block title
+  = viewHelper.metaTitle("Posts Archive")
+
+block content 
+  .post 
+    .content
+      .year
+        //h2 2015
+        ul.archive-list
+          for post in posts 
+
+              li
+                span.month 
+                  = viewHelper.getMonthAndDay(post.getCreatedAt())
+                span &nbsp;&nbsp;·&nbsp; 
+                a(href="/posts/#{post.getPermalink().length() > 0 ? post.getPermalink() : post.getId()}")
+                  = post.getTitle()
+        

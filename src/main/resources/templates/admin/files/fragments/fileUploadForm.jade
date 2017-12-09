@@ -1,0 +1,7 @@
+
+form.post-form(method='POST', action='/admin/files/upload', enctype="multipart/form-data")
+  input(type="hidden", name='_csrf', value='#{_csrf.token}')
+  .item-row
+    input.form-control(type='file', name="file")
+  .item-row
+    input.btn.btn-primary(type='submit', value='Upload')

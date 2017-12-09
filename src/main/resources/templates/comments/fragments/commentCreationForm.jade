@@ -1,0 +1,8 @@
+// Created by bvn13 on 09.12.2017.
+
+
+form.post-form(action="/account/comments", method="POST")
+  .item-row
+    input(type="hidden", name='_csrf', value='#{_csrf.token}')
+  .item-row
+    input(type="hidden", name='parentComment', value='#{comment.getParentComment().getId()}')

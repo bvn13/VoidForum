@@ -1,0 +1,97 @@
+.posts
+
+  .table.post-list
+    for post in posts
+      .tr.post-item
+        .td
+          include ../posts/fragments/socialReadonly
+        .td
+          .text-left
+            div.post-info
+              if post.getDeletedMark()
+                span.post-status
+                  | (deleted)
+              span.post-name
+                a(href="/posts/#{post.getPermalink().length() > 0 ? post.getPermalink() : post.getId()}")
+                  h2 #{post.getTitle()}
+              if post.getTags().size() > 0
+                span.post-tags
+                  for tag in post.getTags()
+                    span.post-tag.label.label-default
+                      | #{tag.getName()}
+              span.clearfix
+            div.post-subinfo
+              span.post-user
+                i.fa.fa-user-o
+                span.post-username #{post.getUser().getNickname()}
+              span.text-mini , #{viewHelper.getFormattedDate(post.getCreatedAt())}
+              span.text-mini , #{post.getComments().size()} comments
+
+        if userService.isCurrentUserAdmin()
+          .td.operations
+            if post.getCensored()
+              a.btn.btn-xs.btn-primary.btn-success(href="javascript:censorePost(#{post.id})", postId="#{post.id}")
+                i.fa.fa-eye
+            else
+              a.btn.btn-xs.btn-primary.btn-warning(href="javascript:censorePost(#{post.id})", postId="#{post.id}")
+                i.fa.fa-eye-slash
+            a.btn.btn-xs.btn-primary(href="/admin/posts/#{post.getId()}/edit")
+              i.fa.fa-edit
+            a.btn.btn-xs.btn-danger.btn-delete(href="javascript:deletePost(#{post.id})", postId="#{post.id}")
+              i.fa.fa-trash-o
+
+
+  .load-more
+      nav
+        ul.pager
+          if totalPages > page
+            li.previous
+              a.btn(href="?page=#{page+1}")
+                span(aria-hidden="true") &larr;
+                |  Older posts
+
+          if page > 1
+            li.next
+              a.btn(href="?page=#{page-1}")
+                |Newer posts
+                span(aria-hidden="true") &rarr;
+
+
+
+  script
+    :javascript
+        var token = $("input[name='_csrf']").val();
+        var header = "X-CSRF-TOKEN";
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(header, token);
+        });
+        function deletePost(postId) {
+            if (confirm("Are you sure to delete post #" + postId)) {
+                //$('#form-delete-' + postId).submit();
+                $.ajax({
+                    url: "/admin/posts/"+postId+"/delete",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        postId: postId
+                    })
+                }).done(function (data) {
+                    location.reload(true);
+                });
+            }
+        }
+        function censorePost(postId) {
+            if (confirm("Are you sure to censore post #" + postId)) {
+                //$('#form-censore-' + postId).submit();
+                $.ajax({
+                    url: "/admin/posts/" + postId + "/censore",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        postId: postId
+                    })
+                }).done(function (data) {
+                    location.reload(true);
+                });
+            }
+        }

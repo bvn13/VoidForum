@@ -1,0 +1,5 @@
+# Указывает директивы для всех роботов одновременно
+User-agent: *
+Disallow: /admin
+Disallow: /admin/*
+Host: https://bvn13.tk
