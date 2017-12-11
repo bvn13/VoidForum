@@ -1,29 +1,5 @@
 
-.load-more
-  nav
-    ul.pagination
-      if page > 1
-        li.previous
-          a.btn(href="?page=#{page - 1}")
-            span(aria-hidden="true") &larr;
-            |  Older comments
-
-      for pageNum in pagesList
-        if pageNum==page
-          li.active
-            a.btn(href="?page=#{pageNum}")
-              = pageNum
-        else
-          li
-            a.btn(href="?page=#{pageNum}")
-              = pageNum
-
-
-      if totalPages > page
-        li.next
-          a.btn(href="?page=#{page + 1}")
-            | Newer comments
-            span(aria-hidden="true") &rarr;
+include fragments/pagination
 
 for comment in comments
   if comment.getDeletedMark()
@@ -31,6 +7,10 @@ for comment in comments
   else
     include one
 
+include fragments/pagination
+
 
 if userService.currentUserCanWrite()
   include fragments/commentCreationForm
+
+

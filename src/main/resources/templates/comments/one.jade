@@ -1,22 +1,17 @@
 
 .panel.panel-default
   .panel-heading
-    span #{comment.getUser().getNickname()}, #{viewHelper.getFormattedDate(comment.getCreatedAt())}
+    span
+      b #{comment.getUser().getNickname()}
+      |, #{viewHelper.getFormattedDate(comment.getCreatedAt())}
     div
       if userService.isCurrentUserAdmin()
         .td
-          admin
+          | admin
 
   .panel-body
     !{comment.getRenderedContent()}
 
 
-  //if userService.currentUserCanWrite()
-  //  div
-  //    = userService.currentUser().getNickname()
-  //  include fragments/commentCreationForm
 
-  //if commentService.childrenCount(comments, comment) > 0
-  //  .comment-children(style="padding-left: #{5 * commentService.childrenCount(comments, comment)}px")
-  //    include list
 
