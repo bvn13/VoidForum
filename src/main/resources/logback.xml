@@ -11,27 +11,32 @@
 	</appender>
 
 	<jmxConfigurator />
-	<root level="WARN">
-		<appender-ref ref="STDOUT" />
-	</root>
 
-	<logger name="ru.bvn13.voidforum" level="ALL">
+	<logger name="ru.bvn13.voidforum" level="DEBUG">
 		<appender-ref ref="STDOUT" />
 	</logger>
 
 	<logger name="org.hibernate.SQL" level="WARN">
 		<appender-ref ref="STDOUT" />
 	</logger>
+
 	<!--<logger name="org.hibernate.type" level="TRACE">-->
 	<!--<appender-ref ref="STDOUT" />-->
 	<!--</logger>-->
+
 	<logger name="org.springframework.web" level="DEBUG">
 		<appender-ref ref="STDOUT" />
 	</logger>
+
 	<logger name="ru.bvn13.voidforum.controllers" level="DEBUG">
 		<appender-ref ref="STDOUT" />
 	</logger>
 	<logger name="ru.bvn13.voidforum.admin.controllers" level="DEBUG">
 		<appender-ref ref="STDOUT" />
 	</logger>
+
+    <root level="WARN">
+        <appender-ref ref="STDOUT" />
+    </root>
+
 </configuration>

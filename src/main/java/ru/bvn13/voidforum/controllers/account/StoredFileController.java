@@ -17,6 +17,7 @@ import ru.bvn13.voidforum.models.StoredFile;
 import ru.bvn13.voidforum.repositories.StoredFileRepository;
 import ru.bvn13.voidforum.services.FileStorageService;
 import ru.bvn13.voidforum.services.UserService;
+import ru.bvn13.voidforum.support.web.MessageHelper;
 import ru.bvn13.voidforum.utils.DTOUtil;
 
 import javax.validation.Valid;
@@ -53,9 +54,10 @@ public class StoredFileController {
     }
 
     @PostMapping("/upload") //new annotation since 4.3
-    public String upload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+    public String upload(@RequestParam("file") MultipartFile file, RedirectAttributes ra) {
         if (file.isEmpty()) {
-            redirectAttributes.addFlashAttribute("uploadStatus", "Please select a file to upload");
+            MessageHelper.addErrorAttribute(ra, "Please select a file to upload");
+            ra.addFlashAttribute("uploadStatus", "Please select a file to upload");
             return "redirect:/account/files/status";
         }
 
@@ -69,12 +71,12 @@ public class StoredFileController {
             this.storageService.storeFile(userService.currentUser(), file.getOriginalFilename(), bytes);
 
             message = "You successfully uploaded '" + file.getOriginalFilename() + "'";
-            redirectAttributes.addFlashAttribute("uploadStatus", message);
+            ra.addFlashAttribute("uploadStatus", message);
 
         } catch (Exception e) {
             e.printStackTrace();
             message = "Internal server error occured";
-            redirectAttributes.addFlashAttribute("uploadStatus", message);
+            ra.addFlashAttribute("uploadStatus", message);
         }
 
         return "redirect:/account/files/status";

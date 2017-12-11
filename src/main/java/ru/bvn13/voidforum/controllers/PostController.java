@@ -67,6 +67,7 @@ public class PostController {
     @RequestMapping(value = "{permalink}", method = GET)
     public String show(@PathVariable String permalink, Model model, @RequestParam(defaultValue = "0") int page, HttpServletRequest request){
         Post post = this.postService.findPostByPermalink(permalink);
+        User user = userService.currentUser();
 
         logger.debug(String.format("ACCESS %s from IP: %s", permalink, this.requestProcessorService.getRealIp(request)));
 
@@ -107,6 +108,7 @@ public class PostController {
         model.addAttribute("comments", comments);
         model.addAttribute("commentForm", commentForm);
         model.addAttribute("commentFormats", commentService.getAvailableCommentFormats());
+        model.addAttribute("disableCommenting", userService.hasPrivilege(user, PrivilegeService.PRIVILEGE_OWNER) || post.getUser().getId().equals(user.getId()) ? false : post.getDisableCommenting());
 
         return "posts/show";
     }

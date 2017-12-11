@@ -197,3 +197,18 @@ h6 {
 body {
     font: 300 14px "Helvetica Neue",Helvetica, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans;
 }
+
+.comment-header ul li {
+    float: left;
+    padding-right: 10px;
+    display: inline;
+}
+
+.comment-header ul li.admin {
+    float: right;
+    display: inline;
+}
+
+.btn {
+    color: #fff !important;
+}

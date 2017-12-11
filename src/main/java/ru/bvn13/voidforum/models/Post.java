@@ -98,4 +98,7 @@ public class Post extends BaseModel {
 
     @Column(nullable = false, columnDefinition = "boolean DEFAULT false")
     private Boolean censored;
+
+    @Column(nullable = false, columnDefinition = "boolean DEFAULT false")
+    private Boolean disableCommenting;
 }

@@ -10,7 +10,15 @@ for comment in comments
 include fragments/pagination
 
 
-if userService.currentUserCanWrite()
+if userService.currentUserCanWrite() && !disableCommenting
   include fragments/commentCreationForm
+
+script
+  :javascript
+      function deleteComment(postId, commentId) {
+          if (confirm("Are you sure to delete comment #" + commentId)) {
+              $('#form-' + postId + '-comment-' + commentId + '-delete').submit();
+          }
+      }
 
 

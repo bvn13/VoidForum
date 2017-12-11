@@ -6,6 +6,7 @@ import ru.bvn13.voidforum.models.User;
 import ru.bvn13.voidforum.models.support.*;
 import ru.bvn13.voidforum.repositories.PostRepository;
 import ru.bvn13.voidforum.repositories.UserRepository;
+import ru.bvn13.voidforum.services.CommentService;
 import ru.bvn13.voidforum.services.PostService;
 import ru.bvn13.voidforum.services.PrivilegeService;
 import ru.bvn13.voidforum.services.UserService;
@@ -49,6 +50,7 @@ public class PostController {
 
     @Autowired
     private UserService userService;
+
 
 
     private static final int PAGE_SIZE = 20;
@@ -133,6 +135,8 @@ public class PostController {
         postService.censorePost(postRepository.findOne(postId));
         return "redirect:/admin/posts";
     }
+
+
 
     @RequestMapping(value = "", method = POST)
     public String create(Principal principal, @Valid PostForm postForm, Errors errors, Model model){

@@ -111,4 +111,10 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
+    public void deleteComment(Long commentId) {
+        Comment comment = this.getCommentById(commentId);
+        comment.setDeletedMark(!comment.getDeletedMark());
+        commentRepository.save(comment);
+    }
+
 }
