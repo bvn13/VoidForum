@@ -22,6 +22,10 @@ block content
           td.input 
             input.form-control(type="text", name="pageSize", value="#{settings.getPageSize()}")
         tr
+          td.setting-label Comments page Size
+          td.input
+            input.form-control(type="text", name="commentsPageSize", value="#{settings.getCommentsPageSize()}")
+        tr
           td.setting-label Storage path
           td.input
             input.form-control(type="text", name="storagePath", value="#{settings.getStoragePath()}")

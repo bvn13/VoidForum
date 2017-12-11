@@ -71,17 +71,19 @@ block content
 
     script
       :javascript
-        var editor = ace.edit("content-editor");
-        editor.setTheme("ace/theme/github");
+        $(document).ready(function() {
+          var editor = ace.edit("content-editor");
+          editor.setTheme("ace/theme/github");
 
-        var MarkdownMode = ace.require("ace/mode/markdown").Mode;
-        editor.getSession().setMode(new MarkdownMode());
+          var MarkdownMode = ace.require("ace/mode/markdown").Mode;
+          editor.getSession().setMode(new MarkdownMode());
 
-        editor.getSession().setUseWrapMode(true);
+          editor.getSession().setUseWrapMode(true);
 
-        $("form").submit(function(){
-            $("#content").val(editor.getValue());
-            return true;
+          $("form").submit(function(){
+              $("#content").val(editor.getValue());
+              return true;
+          });
         });
 
 

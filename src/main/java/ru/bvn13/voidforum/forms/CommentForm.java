@@ -16,14 +16,17 @@ import javax.validation.constraints.NotNull;
 public class CommentForm {
 
     @NotNull
-    private Integer postId;
+    private Long postId;
 
-    private Integer parentCommentId;
+    private Long parentCommentId;
 
     @NotEmpty
     private String content;
 
     @NotNull
-    private CommentFormat commentFormat;
+    private CommentFormat commentFormat = CommentFormat.MARKDOWN;
+
+    @NotNull
+    private Boolean deletedMark = false;
 
 }

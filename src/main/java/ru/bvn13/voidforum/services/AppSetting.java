@@ -21,12 +21,14 @@ public class AppSetting {
     private Integer pageSize = 5;
     private String storagePath = "/tmp";
     private String mainUri = "http://localhost/";
+    private Integer commentsPageSize = 50;
 
     public static final String SITE_NAME = "site_name";
     public static final String SITE_SLOGAN = "site_slogan";
     public static final String PAGE_SIZE = "page_size";
     public static final String STORAGE_PATH = "storage_path";
     public static final String MAIN_URI = "main_uri";
+    public static final String COMMENTS_PAGE_SIZE = "comments_page_size";
 
     @Autowired
     public AppSetting(SettingService settingService){
@@ -89,5 +91,14 @@ public class AppSetting {
         ArrayList<String> ogTypes = new ArrayList<>();
         ogTypes.add("article");
         return ogTypes;
+    }
+
+    public Integer getCommentsPageSize() {
+        return (Integer) settingService.get(COMMENTS_PAGE_SIZE, pageSize);
+    }
+
+    public void setCommentsPageSize(Integer commentsPageSize) {
+        this.commentsPageSize = commentsPageSize;
+        settingService.put(COMMENTS_PAGE_SIZE, commentsPageSize);
     }
 }

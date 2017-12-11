@@ -51,6 +51,7 @@ public class AdminController {
             appSetting.setPageSize(settingsForm.getPageSize());
             appSetting.setStoragePath(settingsForm.getStoragePath());
             appSetting.setMainUri(settingsForm.getMainUri());
+            appSetting.setCommentsPageSize(settingsForm.getCommentsPageSize());
 
             MessageHelper.addSuccessAttribute(ra, "Update settings successfully.");
 

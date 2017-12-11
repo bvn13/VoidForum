@@ -1,8 +1,19 @@
 package ru.bvn13.voidforum.controllers.account;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.bvn13.voidforum.forms.CommentForm;
+import ru.bvn13.voidforum.models.Comment;
+import ru.bvn13.voidforum.repositories.CommentRepository;
+import ru.bvn13.voidforum.services.CommentService;
+import ru.bvn13.voidforum.services.PostService;
+import ru.bvn13.voidforum.services.UserService;
+import ru.bvn13.voidforum.utils.DTOUtil;
+
+import javax.validation.Valid;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -13,11 +24,15 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RequestMapping("/account/comments")
 public class CommentController {
 
+    @Autowired
+    private UserService userService;
 
-    @RequestMapping(value = "", method = POST)
-    public String addComment(Model model) {
+    @Autowired
+    private PostService postService;
 
-        return "";
-    }
+    @Autowired
+    private CommentService commentService;
+
+
 
 }

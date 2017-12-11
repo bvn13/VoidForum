@@ -25,7 +25,7 @@ block content
       textarea.form-control#content(name="content", style="display:none;")
         = postForm.getContent()
       div#content-editor
-        #{postForm.getContent()}
+        = postForm.getContent()
     .item-row
       hr
       .row

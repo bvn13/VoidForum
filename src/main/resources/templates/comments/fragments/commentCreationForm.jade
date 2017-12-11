@@ -1,8 +1,46 @@
-// Created by bvn13 on 09.12.2017.
 
 
-form.post-form(action="/account/comments", method="POST")
+form#commentForm.comment-form(action="comments", method="POST")
   .item-row
     input(type="hidden", name='_csrf', value='#{_csrf.token}')
   .item-row
-    input(type="hidden", name='parentComment', value='#{comment.getParentComment().getId()}')
+    input(type="hidden", name='postId', value='#{commentForm.getPostId()}')
+  .item-row
+    input(type="hidden", name='parentCommentId', value='#{commentForm.getParentCommentId()}')
+
+  .row
+    .col-sm-3
+      span Format
+        select.form-control(name="commentFormat")
+          for format in commentFormats
+            if format != commentForm.getCommentFormat()
+              option(value="#{format.getId()}") #{format.getName()}
+            else
+              option(value="#{format.getId()}", selected="selected") #{format.getName()}
+
+  .item-row
+    textarea.form-control#content(name="content", style="display:none;")
+      = commentForm.getContent()
+    div#content-editor
+      = commentForm.getContent()
+
+  .item-row
+    input.btn.btnSuccess(type="submit", value="Add comment")
+
+
+  script
+    :javascript
+      $(document).ready(function() {
+        var editor = ace.edit("content-editor");
+        editor.setTheme("ace/theme/github");
+
+        var MarkdownMode = ace.require("ace/mode/markdown").Mode;
+        editor.getSession().setMode(new MarkdownMode());
+
+        editor.getSession().setUseWrapMode(true);
+
+        $("#commentForm").submit(function () {
+            $("#content").val(editor.getValue());
+            return true;
+        });
+      });

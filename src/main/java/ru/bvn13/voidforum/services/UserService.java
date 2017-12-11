@@ -77,7 +77,7 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByEmail(email);
         if (user == null) {
             springUser = new org.springframework.security.core.userdetails.User(
-                    " ", " ", true, true, true, true,
+                    "", "", true, true, true, true,
                     getAuthorities(Arrays.asList(
                             roleRepository.findByName(RoleService.ROLE_VISITOR))
                     )
@@ -160,6 +160,10 @@ public class UserService implements UserDetailsService {
     public Boolean currentUserHasPrivilege(String privilege) {
         User user = this.currentUser();
         return this.hasPrivilege(user, privilege);
+    }
+
+    public Boolean currentUserCanWrite() {
+        return this.currentUserHasPrivilege(PrivilegeService.PRIVILEGE_WRITE);
     }
 
 
