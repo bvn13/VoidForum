@@ -45,7 +45,8 @@ img {
 }
 
 .markdown-body img {
-    width: 100%;
+    display: block;
+    max-width: 100%;
     height: auto;
 }
 
@@ -199,6 +200,7 @@ body {
 }
 
 .comment-header ul li {
+    margin-left: -40px;
     float: left;
     padding-right: 10px;
     display: inline;
@@ -207,8 +209,4 @@ body {
 .comment-header ul li.admin {
     float: right;
     display: inline;
-}
-
-.btn {
-    color: #fff !important;
 }

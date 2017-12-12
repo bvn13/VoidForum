@@ -1,7 +1,16 @@
 package ru.bvn13.voidforum.support.web;
 
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ru.bvn13.voidforum.models.support.WebError;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static ru.bvn13.voidforum.support.web.Message.MESSAGE_ATTRIBUTE;
 
@@ -90,4 +99,14 @@ public final class MessageHelper {
     private static void addNamedAttribute(Model model, String name, String message, Message.Type type, Object... args) {
         model.addAttribute(name, new Message(message, type, args));
     }
+
+    public static void addNamedErrorsAsList(RedirectAttributes ra, String name, String message, Errors errors) {
+        List<WebError> webErrors = new ArrayList<>();
+        errors.getAllErrors().forEach(e -> {
+            String field = ((FieldError)e).getField();
+            webErrors.add(new WebError(field, e.getDefaultMessage()));
+        });
+        addNamedErrorAttribute(ra, name, message, webErrors);
+    }
+
 }

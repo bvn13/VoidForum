@@ -13,7 +13,7 @@ import java.util.List;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    List<Comment> findAllByPostOrderById(Post post);
+    Page<Comment> findAllByPostOrderById(Post post, Pageable pageable);
     List<Comment> findAllByPostAndParentCommentOrderById(Post post, Comment parentComment);
 
     Page<Comment> findAllByPostAndDeletedMarkOrderById(Post post, Boolean deletedMark, Pageable pageable);
@@ -21,4 +21,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     @Query("SELECT COUNT(c.id) FROM Comment AS c WHERE c.post = :post AND c.deletedMark = :deletedMark")
     Integer getCommentsCountByPostAndDeletedMark(@Param("post") Post post, @Param("deletedMark") Boolean deletedMark);
+
+    @Query("SELECT COUNT(c.id) FROM Comment AS c WHERE c.post = :post")
+    Integer getCommentsCountByPost(@Param("post") Post post);
 }

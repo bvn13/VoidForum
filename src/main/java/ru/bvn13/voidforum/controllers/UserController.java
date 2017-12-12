@@ -23,6 +23,8 @@ import ru.bvn13.voidforum.error.NicknameExistsException;
 import ru.bvn13.voidforum.forms.RegistrationForm;
 import ru.bvn13.voidforum.models.User;
 import ru.bvn13.voidforum.services.UserService;
+import ru.bvn13.voidforum.support.web.Message;
+import ru.bvn13.voidforum.support.web.MessageHelper;
 import ru.bvn13.voidforum.utils.DTOUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,15 +49,26 @@ public class UserController {
 
     @GetMapping(value = "register")
     public String registrationForm(Model model) {
-        model.addAttribute("form", new RegistrationForm());
+        if (!model.containsAttribute("registrationForm")) {
+            // it contains it after post request when errors occurred and was redirected
+            model.addAttribute("registrationForm", new RegistrationForm());
+        }
         return "users/register";
     }
 
 
     @PostMapping(value = "register")
     public String register(@Valid RegistrationForm registrationForm, Errors errors, Model model, RedirectAttributes ra) {
+
+        if (errors.hasErrors()) {
+            MessageHelper.addNamedErrorsAsList(ra, "errors", "Please check errors:", errors);
+            ra.addFlashAttribute("registrationForm", registrationForm);
+            return "redirect:/register";
+        }
+
         if (!registrationForm.getPassword().equals(registrationForm.getPasswordCheck())) {
-            ra.addFlashAttribute("error", "Verify your password!");
+            MessageHelper.addNamedErrorAttribute(ra, "error", "Verify your password!");
+            ra.addFlashAttribute("registrationForm", registrationForm);
             return "redirect:/register";
         }
 
@@ -63,7 +76,8 @@ public class UserController {
                 || registrationForm.getNickname().isEmpty()
                 || registrationForm.getPassword().isEmpty()
                 || registrationForm.getPasswordCheck().isEmpty()) {
-            ra.addFlashAttribute("error", "Not all necessary fields are specified");
+            MessageHelper.addNamedErrorAttribute(ra, "error", "Not all necessary fields are specified");
+            ra.addFlashAttribute("registrationForm", registrationForm);
             return "redirect:/register";
         }
 
@@ -76,12 +90,12 @@ public class UserController {
         try {
             userService.registerNewUserAccount(user);
         } catch (EmailExistsException e) {
-            e.printStackTrace();
-            ra.addFlashAttribute("error", "There is an account with specified email and nickname");
+            MessageHelper.addNamedErrorAttribute(ra, "error", e.getMessage());
+            ra.addFlashAttribute("registrationForm", registrationForm);
             return "redirect:/register";
         } catch (NicknameExistsException e) {
-            e.printStackTrace();
-            ra.addFlashAttribute("error", "There is an account with specified email and nickname");
+            MessageHelper.addNamedErrorAttribute(ra, "error", e.getMessage());
+            ra.addFlashAttribute("registrationForm", registrationForm);
             return "redirect:/register";
         }
 

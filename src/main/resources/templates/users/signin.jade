@@ -9,7 +9,7 @@ block content
       .login-panel
         form.signin-form(method="post",action="/authenticate")
           input(type="hidden", name='_csrf', value='#{_csrf.token}')
-          input.form-control(type="text",name="username",placeholder="Email")
+          input.form-control(type="text",name="username",placeholder="Email or Nickname")
           input.form-control(type="password",name="password",placeholder="Password")
           div.col-centered(style="padding-top: 10px;")
             input(type="checkbox",name="remember-me")

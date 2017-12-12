@@ -1,5 +1,6 @@
 package ru.bvn13.voidforum.controllers.admin;
 
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.bvn13.voidforum.forms.PostForm;
 import ru.bvn13.voidforum.models.Post;
 import ru.bvn13.voidforum.models.User;
@@ -10,6 +11,7 @@ import ru.bvn13.voidforum.services.CommentService;
 import ru.bvn13.voidforum.services.PostService;
 import ru.bvn13.voidforum.services.PrivilegeService;
 import ru.bvn13.voidforum.services.UserService;
+import ru.bvn13.voidforum.support.web.MessageHelper;
 import ru.bvn13.voidforum.utils.DTOUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -139,14 +141,9 @@ public class PostController {
 
 
     @RequestMapping(value = "", method = POST)
-    public String create(Principal principal, @Valid PostForm postForm, Errors errors, Model model){
+    public String create(Principal principal, @Valid PostForm postForm, Errors errors, Model model, RedirectAttributes ra){
         if (errors.hasErrors()) {
-            Map<String, WebError> webErrors = new HashMap<>();
-            errors.getAllErrors().forEach(e -> {
-                String field = ((FieldError)e).getField();
-                webErrors.put(field, new WebError(field, e.getDefaultMessage()));
-            });
-            model.addAttribute("errors", webErrors);
+            MessageHelper.addNamedErrorsAsList(ra, "errors", "Please check following errors:", errors);
             return this.makeFormPostCreation(model, postForm);
         } else {
             Post post = DTOUtil.map(postForm, Post.class);
@@ -161,14 +158,9 @@ public class PostController {
     }
 
     @RequestMapping(value = "{postId:[0-9]+}", method = {PUT, POST})
-    public String update(@PathVariable Long postId, @Valid PostForm postForm, Errors errors, Model model){
-        if (errors.hasErrors()){
-            Map<String, WebError> webErrors = new HashMap<>();
-            errors.getAllErrors().forEach(e -> {
-                String field = ((FieldError)e).getField();
-                webErrors.put(field, new WebError(field, e.getDefaultMessage()));
-            });
-            model.addAttribute("errors", webErrors);
+    public String update(@PathVariable Long postId, @Valid PostForm postForm, Errors errors, Model model, RedirectAttributes ra){
+        if (errors.hasErrors()) {
+            MessageHelper.addNamedErrorsAsList(ra, "errors", "Please check following errors:", errors);
             return this.makeFormPostEdition(postId, model, postForm);
         } else {
             Post post = postRepository.findOne(postId);

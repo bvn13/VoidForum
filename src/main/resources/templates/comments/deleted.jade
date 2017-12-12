@@ -1,7 +1,29 @@
 
 .panel.panel-warning
+  .panel-heading.comment-header
+    ul
+      li
+        b
+          i
+            | DELETED:
+        b #{comment.getUser().getNickname()}
+        | , #{viewHelper.getFormattedDate(comment.getCreatedAt())}
+
+      li.admin
+        if userService.isCurrentUserAdmin()
+          .operations
+            a.btn.btn-xs.btn-danger.btn-delete(href="javascript:deleteComment(#{post.id}, #{comment.getId()})", postId="#{post.id}")
+              i.fa.fa-trash-o
+
+            form(id="form-#{post.getId()}-comment-#{comment.getId()}-delete",style="visibility: hidden", method="post", action="/admin/comments/#{comment.getId()}/delete")
+              input(type="hidden", name='_csrf', value='#{_csrf.token}')
+              input(type="hidden", name='postId', value='#{post.getId()}')
+
+    div(class="clearfix")
+
   .panel-body
     | Sometimes there was a comment here...
+
 
 
   //if commentService.childrenCount(comments, comment) > 0

@@ -65,9 +65,14 @@ public class PostController {
     }
 
     @RequestMapping(value = "{permalink}", method = GET)
-    public String show(@PathVariable String permalink, Model model, @RequestParam(defaultValue = "0") int page, HttpServletRequest request){
+    public String show(@PathVariable String permalink, Model model, @RequestParam(defaultValue = "0") int page, HttpServletRequest request) {
         Post post = this.postService.findPostByPermalink(permalink);
         User user = userService.currentUser();
+        Boolean isAdmin = userService.hasPrivilege(user, PrivilegeService.PRIVILEGE_ADMIN);
+
+        if (post.getCensored() && !userService.hasPrivilege(user, PrivilegeService.PRIVILEGE_WRITE)) {
+            throw new AccessDeniedException("You are not allowed here");
+        }
 
         logger.debug(String.format("ACCESS %s from IP: %s", permalink, this.requestProcessorService.getRealIp(request)));
 
@@ -93,13 +98,26 @@ public class PostController {
         commentForm.setPostId(post.getId());
 
         Integer commentsPageSize = appSetting.getCommentsPageSize();
-        Integer lastPage = commentService.getLastPageCommentsForPost(post, commentsPageSize);
+        Integer lastPage = null;
+        if (isAdmin) {
+            lastPage = commentService.getLastPageCommentsForPostForAdmin(post, commentsPageSize);
+        } else {
+            lastPage = commentService.getLastPageCommentsForPost(post, commentsPageSize);
+        }
         Page<Comment> comments = null;
         if (page > 0) {
-            comments = commentService.getCommentsForPost(post, page - 1, commentsPageSize);
+            if (isAdmin) {
+                comments = commentService.getCommentsForPostForAdmin(post, page - 1, commentsPageSize);
+            } else {
+                comments = commentService.getCommentsForPost(post, page - 1, commentsPageSize);
+            }
         } else {
             page = lastPage+1;
-            comments = commentService.getCommentsForPost(post, lastPage, commentsPageSize);
+            if (isAdmin) {
+                comments = commentService.getCommentsForPostForAdmin(post, lastPage, commentsPageSize);
+            } else {
+                comments = commentService.getCommentsForPost(post, lastPage, commentsPageSize);
+            }
         }
 
         model.addAttribute("page", page);
@@ -108,7 +126,7 @@ public class PostController {
         model.addAttribute("comments", comments);
         model.addAttribute("commentForm", commentForm);
         model.addAttribute("commentFormats", commentService.getAvailableCommentFormats());
-        model.addAttribute("disableCommenting", userService.hasPrivilege(user, PrivilegeService.PRIVILEGE_OWNER) || post.getUser().getId().equals(user.getId()) ? false : post.getDisableCommenting());
+        model.addAttribute("disableCommenting", userService.currentUserCanWriteCommentToPost(post));
 
         return "posts/show";
     }
@@ -118,14 +136,16 @@ public class PostController {
     public String addComment(@PathVariable String permalink, @Valid CommentForm commentForm, Errors errors, Model model) {
 
         User user = userService.currentUser();
-        if (!userService.currentUserHasPrivilege(PrivilegeService.PRIVILEGE_WRITE)) {
+        Post post = postService.getPost(commentForm.getPostId());
+
+        if (!userService.currentUserCanWrite() || !userService.currentUserCanWriteCommentToPost(post)) {
             throw new AccessDeniedException("You are not allowed here");
         }
 
         Comment comment = new Comment();
         DTOUtil.mapTo(commentForm, comment);
         comment.setUser(user);
-        comment.setPost(postService.getPost(commentForm.getPostId()));
+        comment.setPost(post);
         comment.setParentComment(commentService.getCommentById(commentForm.getParentCommentId()));
         comment.setDepth(commentService.calculateDepth(comment));
 

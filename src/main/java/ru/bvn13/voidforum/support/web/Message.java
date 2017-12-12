@@ -1,5 +1,9 @@
 package ru.bvn13.voidforum.support.web;
 
+import ru.bvn13.voidforum.models.support.WebError;
+
+import java.util.List;
+
 /**
  * A message to be displayed in web context. Depending on the type, different style will be applied.
  */
@@ -42,5 +46,9 @@ public class Message implements java.io.Serializable {
 
 	public Object[] getArgs() {
 		return args;
+	}
+
+	public List<WebError> getArgsAsWebErrorList() {
+		return (List<WebError>) args[0];
 	}
 }

@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.hql.internal.ast.util.SessionFactoryHelper;
 import ru.bvn13.voidforum.error.EmailExistsException;
 import ru.bvn13.voidforum.error.NicknameExistsException;
+import ru.bvn13.voidforum.models.Post;
 import ru.bvn13.voidforum.models.Privilege;
 import ru.bvn13.voidforum.models.User;
 import ru.bvn13.voidforum.models.Role;
@@ -68,13 +69,15 @@ public class UserService implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String emailOrNickname) throws UsernameNotFoundException {
 
         org.springframework.security.core.userdetails.User springUser = null;
 
-        //sessionFactory.openSession();
+        User user = userRepository.findByEmail(emailOrNickname);
+        if (user == null) {
+            user = userRepository.findByNickname(emailOrNickname);
+        }
 
-        User user = userRepository.findByEmail(email);
         if (user == null) {
             springUser = new org.springframework.security.core.userdetails.User(
                     "", "", true, true, true, true,
@@ -89,8 +92,6 @@ public class UserService implements UserDetailsService {
                     true, getAuthorities(roles)
             );
         }
-
-        //sessionFactory.close();
 
         return springUser;
     }
@@ -166,9 +167,14 @@ public class UserService implements UserDetailsService {
         return this.currentUserHasPrivilege(PrivilegeService.PRIVILEGE_WRITE);
     }
 
+    public Boolean currentUserCanWriteCommentToPost(Post post) {
+        User user = currentUser();
+        return hasPrivilege(user, PrivilegeService.PRIVILEGE_OWNER)
+                || post.getUser().getId().equals(user.getId()) ? false : post.getDisableCommenting();
+    }
+
 
     public User registerNewUserAccount(User user) throws EmailExistsException, NicknameExistsException {
-
         if (emailExist(user.getEmail())) {
             throw new EmailExistsException("There is an account with that email address: " + user.getEmail());
         }

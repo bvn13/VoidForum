@@ -52,9 +52,18 @@ public class CommentService {
         Page<Comment> availableComments = commentRepository.findAllByPostAndDeletedMarkOrderById(post, false, new PageRequest(page, pageSize, Sort.Direction.ASC, "createdAt"));
         return availableComments;
     }
+    public Page<Comment> getCommentsForPostForAdmin(Post post, int page, int pageSize) {
+        Page<Comment> availableComments = commentRepository.findAllByPostOrderById(post, new PageRequest(page, pageSize, Sort.Direction.ASC, "createdAt"));
+        return availableComments;
+    }
 
     public Integer getLastPageCommentsForPost(Post post, int pageSize) {
         Integer count = commentRepository.getCommentsCountByPostAndDeletedMark(post, false);
+        return (int) Math.ceil(count.intValue() / pageSize);
+    }
+
+    public Integer getLastPageCommentsForPostForAdmin(Post post, int pageSize) {
+        Integer count = commentRepository.getCommentsCountByPost(post);
         return (int) Math.ceil(count.intValue() / pageSize);
     }
 

@@ -7,7 +7,7 @@
         |, #{viewHelper.getFormattedDate(comment.getCreatedAt())}
       li.admin
         if userService.isCurrentUserAdmin()
-          .td
+          .operations
             a.btn.btn-xs.btn-danger.btn-delete(href="javascript:deleteComment(#{post.id}, #{comment.getId()})", postId="#{post.id}")
               i.fa.fa-trash-o
 

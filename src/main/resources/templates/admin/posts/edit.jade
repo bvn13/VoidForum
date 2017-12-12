@@ -11,9 +11,9 @@ block content
 
   if errors != null
     .alert.alert-danger
-      span Check out errors!
+      = errors.getMessage()
       ol
-        for err in errors.values()
+        for err in errors.getArgsAsWebErrorList()
           li #{err.getField()} : #{err.getErrorMessage()}
 
   form.post-form(method="post", action="/admin/posts/#{post.getId()}")
