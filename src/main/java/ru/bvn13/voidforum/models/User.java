@@ -3,6 +3,7 @@ package ru.bvn13.voidforum.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import ru.bvn13.voidforum.models.support.AppLocale;
 import ru.bvn13.voidforum.services.RoleService;
 import ru.bvn13.voidforum.services.UserService;
 
@@ -46,6 +47,9 @@ public class User extends BaseModel {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE)
     private Collection<Comment> comments = new ArrayList<>();
+
+    @Column
+    private AppLocale locale;
 
     public User() {
 

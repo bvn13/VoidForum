@@ -8,12 +8,13 @@ import ru.bvn13.voidforum.models.support.CommentFormat;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * Created by bvn13 on 08.12.2017.
  */
 @Data
-public class CommentForm {
+public class CommentForm implements Serializable {
 
     @NotNull
     private Long postId;
@@ -22,6 +23,8 @@ public class CommentForm {
 
     @NotEmpty
     private String content;
+
+    private String renderedContent;
 
     @NotNull
     private CommentFormat commentFormat = CommentFormat.MARKDOWN;

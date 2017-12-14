@@ -21,4 +21,17 @@ script
           }
       }
 
+if userService.isCurrentUserAdmin()
+  script
+    :javascript
+      function showComment(commentId) {
 
+          $.ajax({
+              url: "/admin/comments/" + commentId,
+              type: "GET",
+              contentType: "application/json"
+          }).done(function (data) {
+              $("#comment-"+commentId).html(data.renderedContent);
+          });
+
+      }

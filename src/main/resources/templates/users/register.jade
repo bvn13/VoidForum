@@ -1,7 +1,7 @@
 extends ../layout/app
 
 block page_title
-  h1 Registration
+  h1 #{locale.msg("register.header")}
 
 
 block content
@@ -20,12 +20,24 @@ block content
 
   .row
     .col-md-4.col-md-offset-4.login-container
+      span #{locale.msg("language")}
+      span.operations
+        for loc in locale.getSupportedLocales()
+          if loc != locale.getCurrentLocale()
+            a.btn.btn-default(href="/register?lang=#{loc.getId()}") #{loc.getName()}
+          else
+            a.btn.btn-primary(href="/register?lang=#{loc.getId()}") #{loc.getName()}
+
+
+
+  .row
+    .col-md-4.col-md-offset-4.login-container
       .login-panel
-        form.signin-form(method="post",action="/register")
+        form.signin-form(method="post",action="/register?lang=#{locale.getCurrentLocale().getId()}")
           input(type="hidden", name='_csrf', value='#{_csrf.token}')
-          input.form-control(type="text",name="username",placeholder="Email", value="#{registrationForm.getUsername()}")
-          input.form-control(type="text",name="nickname",placeholder="Nickname", value="#{registrationForm.getNickname()}")
-          input.form-control(type="password",name="password",placeholder="Password")
-          input.form-control(type="password",name="passwordCheck",placeholder="Verify password")
-          button.btn.btn-primary.btn-block(type="submit") Register
-          a.btn.btn-default.btn-block(href="/signin") Login
+          input.form-control(type="text",name="username",placeholder='#{locale.msg("register.form.email")}', value="#{registrationForm.getUsername()}")
+          input.form-control(type="text",name="nickname",placeholder='#{locale.msg("register.form.nickname")}', value="#{registrationForm.getNickname()}")
+          input.form-control(type="password",name="password",placeholder='#{locale.msg("register.form.password")}')
+          input.form-control(type="password",name="passwordCheck",placeholder='#{locale.msg("register.form.password-verify")}')
+          button.btn.btn-primary.btn-block(type="submit") #{locale.msg("register.form.register")}
+          a.btn.btn-default.btn-block(href="/signin?lang=#{locale.getCurrentLocale().getId()}") #{locale.msg("register.form.login")}

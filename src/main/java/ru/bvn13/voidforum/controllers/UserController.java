@@ -1,33 +1,20 @@
 package ru.bvn13.voidforum.controllers;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.MediaType;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.bvn13.voidforum.error.EmailExistsException;
 import ru.bvn13.voidforum.error.NicknameExistsException;
 import ru.bvn13.voidforum.forms.RegistrationForm;
 import ru.bvn13.voidforum.models.User;
+import ru.bvn13.voidforum.models.support.AppLocale;
 import ru.bvn13.voidforum.services.UserService;
-import ru.bvn13.voidforum.support.web.Message;
+import ru.bvn13.voidforum.support.localization.SessionStorer;
 import ru.bvn13.voidforum.support.web.MessageHelper;
-import ru.bvn13.voidforum.utils.DTOUtil;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
 
@@ -40,25 +27,30 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private SessionStorer sessionStorer;
+
 
     @RequestMapping(value = "signin", method = RequestMethod.GET)
-    public String signin(Principal principal, RedirectAttributes ra) {
+    public String signin(@RequestParam(defaultValue = "en") String lang, Principal principal, RedirectAttributes ra) {
+        sessionStorer.setLocale(AppLocale.valueOfOrDefault(lang.toUpperCase()));
         return principal == null ? "users/signin" : "redirect:/";
     }
 
 
     @GetMapping(value = "register")
-    public String registrationForm(Model model) {
+    public String registrationForm(@RequestParam(defaultValue = "en") String lang, Model model) {
         if (!model.containsAttribute("registrationForm")) {
             // it contains it after post request when errors occurred and was redirected
             model.addAttribute("registrationForm", new RegistrationForm());
         }
+        sessionStorer.setLocale(AppLocale.valueOfOrDefault(lang.toUpperCase()));
         return "users/register";
     }
 
 
     @PostMapping(value = "register")
-    public String register(@Valid RegistrationForm registrationForm, Errors errors, Model model, RedirectAttributes ra) {
+    public String register(@RequestParam(defaultValue = "en") String lang, @Valid RegistrationForm registrationForm, Errors errors, Model model, RedirectAttributes ra) {
 
         if (errors.hasErrors()) {
             MessageHelper.addNamedErrorsAsList(ra, "errors", "Please check errors:", errors);
@@ -81,10 +73,13 @@ public class UserController {
             return "redirect:/register";
         }
 
+        AppLocale locale = AppLocale.valueOfOrDefault(lang.toUpperCase());
+
         User user = new User();
         user.setEmail(registrationForm.getUsername());
         user.setNickname(registrationForm.getNickname());
         user.setPassword(registrationForm.getPassword());
+        user.setLocale(locale);
         //DTOUtil.mapTo(registrationForm, user);
 
         try {

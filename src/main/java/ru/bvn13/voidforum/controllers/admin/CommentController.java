@@ -1,17 +1,19 @@
 package ru.bvn13.voidforum.controllers.admin;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import ru.bvn13.voidforum.error.NotFoundException;
 import ru.bvn13.voidforum.forms.CommentDeletionForm;
+import ru.bvn13.voidforum.forms.CommentForm;
 import ru.bvn13.voidforum.models.Comment;
 import ru.bvn13.voidforum.models.Post;
 import ru.bvn13.voidforum.services.CommentService;
 import ru.bvn13.voidforum.services.PostService;
+import ru.bvn13.voidforum.utils.DTOUtil;
 
 import javax.validation.Valid;
 
@@ -33,6 +35,17 @@ public class CommentController {
     @Autowired
     private PostService postService;
 
+
+    @GetMapping(value = "/{commentId:[\\d]+}", produces= MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody CommentForm getComment(@PathVariable Long commentId) {
+        Comment comment = commentService.getCommentById(commentId);
+        if (comment == null) {
+            throw new NotFoundException("Comment not found");
+        }
+        CommentForm commentForm = new CommentForm();
+        DTOUtil.mapTo(comment, commentForm);
+        return commentForm;
+    }
 
     @RequestMapping(value = "/{commentId:[\\d]+}/delete", method = {POST})
     public String deleteComment(@PathVariable Long commentId, @Valid CommentDeletionForm form, Errors errors, Model model) throws Exception {

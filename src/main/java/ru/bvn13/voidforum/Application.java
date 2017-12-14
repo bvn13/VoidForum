@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import redis.embedded.Redis;
-import redis.embedded.RedisServer;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -19,6 +19,7 @@ import static java.util.stream.Collectors.joining;
  */
 
 @SpringBootApplication
+@EnableCaching
 public class Application {
 
 	private static final Logger logger = LoggerFactory.getLogger(Application.class);

@@ -10,6 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import ru.bvn13.voidforum.support.localization.LocalizationHelper;
 import ru.bvn13.voidforum.support.web.ViewHelperVF;
 
 import javax.annotation.PostConstruct;
@@ -29,9 +30,13 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Autowired
     private Environment env;
 
+    //@Autowired
+    //private LocalizationHelper localizationHelper;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(viewObjectAddingInterceptor());
+        //registry.addInterceptor(localizationHelper.localeChangeInterceptor());
         super.addInterceptors(registry);
     }
 

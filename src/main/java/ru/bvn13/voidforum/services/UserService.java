@@ -1,6 +1,8 @@
 package ru.bvn13.voidforum.services;
 
 import com.domingosuarez.boot.autoconfigure.jade4j.JadeHelper;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.Hibernate;
 import org.hibernate.SessionFactory;
 import org.hibernate.hql.internal.ast.util.SessionFactoryHelper;
@@ -10,6 +12,7 @@ import ru.bvn13.voidforum.models.Post;
 import ru.bvn13.voidforum.models.Privilege;
 import ru.bvn13.voidforum.models.User;
 import ru.bvn13.voidforum.models.Role;
+import ru.bvn13.voidforum.models.support.AppLocale;
 import ru.bvn13.voidforum.models.support.PostFormat;
 import ru.bvn13.voidforum.repositories.PrivilegeRepository;
 import ru.bvn13.voidforum.repositories.UserRepository;

@@ -1,20 +1,31 @@
 extends ../layout/app
 
 block page_title
-  h1 Sign in
+  h1 #{locale.msg("signin.header")}
 
 block content
+  .row
+    .col-md-4.col-md-offset-4.login-container
+      span #{locale.msg("language")}
+      span.operations
+        for loc in locale.getSupportedLocales()
+          if loc != locale.getCurrentLocale()
+            a.btn.btn-default(href="/signin?lang=#{loc.getId()}") #{loc.getName()}
+          else
+            a.btn.btn-primary(href="/signin?lang=#{loc.getId()}") #{loc.getName()}
+
+
   .row
     .col-md-4.col-md-offset-4.login-container
       .login-panel
         form.signin-form(method="post",action="/authenticate")
           input(type="hidden", name='_csrf', value='#{_csrf.token}')
-          input.form-control(type="text",name="username",placeholder="Email or Nickname")
-          input.form-control(type="password",name="password",placeholder="Password")
+          input.form-control(type="text",name="username",placeholder='#{locale.msg("signin.form.email")}')
+          input.form-control(type="password",name="password",placeholder='#{locale.msg("signin.form.password")}')
           div.col-centered(style="padding-top: 10px;")
             input(type="checkbox",name="remember-me")
             span(style="padding-left: 10px")
-              | remember me
-          button.btn.btn-primary.btn-block(type="submit") Login
-          a.btn.btn-default.btn-block(href="/register") Register
+              | #{locale.msg("signin.form.rememberme")}
+          button.btn.btn-primary.btn-block(type="submit") #{locale.msg("signin.form.login")}
+          a.btn.btn-default.btn-block(href="/register?lang=#{locale.getCurrentLocale().getId()}") #{locale.msg("signin.form.register")}
   

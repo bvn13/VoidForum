@@ -12,6 +12,9 @@
       li.admin
         if userService.isCurrentUserAdmin()
           .operations
+            a.btn.btn-xs.btn-info(href="javascript:showComment(#{comment.getId()})")
+              i.fa.fa-eye
+
             a.btn.btn-xs.btn-danger.btn-delete(href="javascript:deleteComment(#{post.id}, #{comment.getId()})", postId="#{post.id}")
               i.fa.fa-trash-o
 
@@ -21,12 +24,8 @@
 
     div(class="clearfix")
 
-  .panel-body
+  div.panel-body(id="comment-#{comment.getId()}")
     | Sometimes there was a comment here...
 
 
-
-  //if commentService.childrenCount(comments, comment) > 0
-  //  .comment-children(style="padding-left: #{5 * commentService.childrenCount(comments, comment)}px")
-  //    include list
 

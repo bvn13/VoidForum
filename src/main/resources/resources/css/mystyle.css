@@ -171,6 +171,9 @@ img.borderless {
     color: white;
     margin-left: 5px;
 }
+.operations a.btn-default {
+    color: #333;
+}
 .post-status {
     float: left;
     color: red;
